@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>수원 화성 · QR 역사 미션</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --obang-blue: #1e6fd9;
+      --obang-red: #e63946;
+      --obang-yellow: #ffd60a;
+      --obang-white: #fffef7;
+      --obang-black: #1a1a1a;
+      --bg-cream: #fff8e7;
+      --shadow: 4px 4px 0 var(--obang-black);
+      --radius: 20px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Noto Sans KR", sans-serif;
+      background: var(--bg-cream);
+      color: var(--obang-black);
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    /* Pop-art halftone backdrop */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(30, 111, 217, 0.08) 1px, transparent 1px);
+      background-size: 14px 14px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    header.hero {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--obang-yellow);
+      border: 3px solid var(--obang-black);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-family: "Black Han Sans", "Noto Sans KR", sans-serif;
+      font-size: clamp(1.75rem, 6vw, 2.25rem);
+      line-height: 1.2;
+      text-shadow: 3px 3px 0 var(--obang-white), 4px 4px 0 var(--obang-blue);
+    }
+
+    h1 span.accent {
+      color: var(--obang-red);
+    }
+
+    .subtitle {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #444;
+      line-height: 1.5;
+    }
+
+    .card {
+      background: var(--obang-white);
+      border: 3px solid var(--obang-black);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 1rem;
+      margin-bottom: 14px;
+    }
+
+    .card-title .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--obang-black);
+    }
+
+    .dot.blue { background: var(--obang-blue); }
+    .dot.red { background: var(--obang-red); }
+    .dot.yellow { background: var(--obang-yellow); }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 14px 16px;
+      border: 3px solid var(--obang-black);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      outline: none;
+      transition: box-shadow 0.15s;
+    }
+
+    input[type="text"]:focus {
+      box-shadow: 0 0 0 3px var(--obang-yellow);
+    }
+
+    input[type="text"]::placeholder {
+      color: #aaa;
+      font-weight: 500;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: 3px solid var(--obang-black);
+      border-radius: var(--radius-sm);
+      font-weight: 800;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    button:active {
+      transform: translate(2px, 2px);
+      box-shadow: none !important;
+    }
+
+    .btn-primary {
+      background: var(--obang-blue);
+      color: #fff;
+      padding: 14px 20px;
+      font-size: 0.95rem;
+      box-shadow: var(--shadow);
+      white-space: nowrap;
+    }
+
+    .hint {
+      margin-top: 12px;
+      font-size: 0.78rem;
+      color: #666;
+      line-height: 1.45;
+    }
+
+    .hint code {
+      background: var(--obang-yellow);
+      padding: 2px 6px;
+      border-radius: 6px;
+      border: 1px solid var(--obang-black);
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: var(--obang-black);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      z-index: 200;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-width: calc(100% - 32px);
+      text-align: center;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.error {
+      background: var(--obang-red);
+      border: 2px solid var(--obang-black);
+    }
+
+    /* Modal */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 26, 26, 0.55);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s, visibility 0.25s;
+    }
+
+    @media (min-width: 480px) {
+      .overlay {
+        align-items: center;
+      }
+    }
+
+    .overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .quiz-popup {
+      width: 100%;
+      max-width: 420px;
+      max-height: min(88dvh, 640px);
+      overflow-y: auto;
+      background: var(--obang-white);
+      border: 4px solid var(--obang-black);
+      border-radius: var(--radius);
+      box-shadow: 8px 8px 0 var(--obang-red);
+      transform: translateY(40px) scale(0.96);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .overlay.open .quiz-popup {
+      transform: translateY(0) scale(1);
+    }
+
+    .quiz-header {
+      padding: 18px 20px 14px;
+      border-bottom: 3px dashed var(--obang-black);
+      position: relative;
+      background: linear-gradient(135deg, var(--obang-yellow) 0%, #ffe566 100%);
+    }
+
+    .quiz-tag {
+      font-size: 0.7rem;
+      font-weight: 800;
+      background: var(--obang-white);
+      display: inline-block;
+      padding: 4px 10px;
+      border: 2px solid var(--obang-black);
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    .quiz-header h2 {
+      font-family: "Black Han Sans", sans-serif;
+      font-size: 1.35rem;
+      line-height: 1.25;
+    }
+
+    .btn-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      background: var(--obang-white);
+      font-size: 1.25rem;
+      line-height: 1;
+      box-shadow: 3px 3px 0 var(--obang-black);
+    }
+
+    .quiz-body {
+      padding: 20px;
+    }
+
+    .quiz-image-wrap {
+      margin-bottom: 18px;
+      border: 3px solid var(--obang-black);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      box-shadow: 3px 3px 0 var(--obang-blue);
+      background: #f5f5f5;
+    }
+
+    .quiz-image-wrap img {
+      display: block;
+      width: 100%;
+      height: auto;
+      vertical-align: middle;
+    }
+
+    .quiz-image-placeholder {
+      display: none;
+      padding: 48px 16px;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #888;
+      line-height: 1.5;
+      background: repeating-linear-gradient(
+        -45deg,
+        #fff,
+        #fff 8px,
+        #f0f0f0 8px,
+        #f0f0f0 16px
+      );
+    }
+
+    .quiz-image-wrap.is-empty .quiz-image-placeholder {
+      display: block;
+    }
+
+    .quiz-image-wrap.is-empty img {
+      display: none;
+    }
+
+    .quiz-question {
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      padding: 16px;
+      background: #fff;
+      border: 3px solid var(--obang-black);
+      border-radius: var(--radius-sm);
+      box-shadow: 3px 3px 0 var(--obang-yellow);
+    }
+
+    footer.note {
+      text-align: center;
+      font-size: 0.72rem;
+      color: #888;
+      margin-top: 8px;
+    }
+
+    .obang-strip {
+      display: flex;
+      height: 6px;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 2px solid var(--obang-black);
+      margin-bottom: 20px;
+    }
+
+    .obang-strip span {
+      flex: 1;
+    }
+
+    .obang-strip .b { background: var(--obang-blue); }
+    .obang-strip .r { background: var(--obang-red); }
+    .obang-strip .y { background: var(--obang-yellow); }
+    .obang-strip .w { background: var(--obang-white); }
+    .obang-strip .k { background: var(--obang-black); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="obang-strip" aria-hidden="true">
+      <span class="b"></span><span class="r"></span><span class="y"></span><span class="w"></span><span class="k"></span>
+    </div>
+
+    <header class="hero">
+      <div class="badge">SUWON HWASEONG</div>
+      <h1>화성 <span class="accent">역사</span> 미션</h1>
+      <p class="subtitle">현장 QR을 스캔한 뒤,<br />표지판에 적힌 단서 번호를 입력하세요.</p>
+    </header>
+
+    <section class="card" aria-labelledby="clue-label">
+      <div class="card-title">
+        <span class="dot blue"></span>
+        <span id="clue-label">단서 번호 입력</span>
+      </div>
+      <label for="clue-input">예: 가로ㄱ, 세로3</label>
+      <form id="clue-form" class="input-row" autocomplete="off">
+        <input
+          id="clue-input"
+          type="text"
+          inputmode="text"
+          placeholder="단서 번호"
+          maxlength="20"
+          aria-describedby="clue-hint"
+        />
+        <button type="submit" class="btn-primary">확인</button>
+      </form>
+      <p id="clue-hint" class="hint">
+        가로 <code>ㄱ</code>~<code>ㅇ</code> 8칸 · 세로 <code>1</code>~<code>8</code> 8칸 (띄어쓰기 무시)
+      </p>
+    </section>
+
+    <section class="card">
+      <div class="card-title">
+        <span class="dot red"></span>
+        <span>미션 안내</span>
+      </div>
+      <p class="hint" style="margin-top: 0; font-size: 0.85rem; color: #333;">
+        ① 성곽 곳곳의 QR 코드를 찾아보세요.<br />
+        ② 단서판의 <strong>가로·세로 번호</strong>를 확인하세요.<br />
+        ③ 문제를 확인하고 현장에서 답을 찾아 보세요!
+      </p>
+    </section>
+
+    <footer class="note">© 수원 화성 역사 미션</footer>
+  </div>
+
+  <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="quiz-title" hidden>
+    <article class="quiz-popup">
+      <header class="quiz-header">
+        <span id="quiz-tag" class="quiz-tag">단서</span>
+        <h2 id="quiz-title">퀴즈</h2>
+        <button type="button" class="btn-close" id="btn-close" aria-label="닫기">×</button>
+      </header>
+      <div class="quiz-body">
+        <div id="quiz-image-wrap" class="quiz-image-wrap is-empty">
+          <img id="quiz-image" src="" alt="" />
+          <p class="quiz-image-placeholder">이미지 없음<br /><span style="font-weight:500;font-size:0.75rem;">clues · image 경로를 넣어 주세요</span></p>
+        </div>
+        <div id="quiz-question" class="quiz-question"></div>
+      </div>
+    </article>
+  </div>
+
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+  <script>
+    /**
+     * 아래 clues 만 수정하세요.
+     * - image: 이미지 파일 경로 (예: "images/ga-ro-g.jpg") · 없으면 ""
+     * - question: 문제 텍스트 (줄바꿈 그대로 표시됩니다)
+     */
+    const clues = {
+      /* ── 가로 ㄱ ~ ㅇ (8문제) ── */
+      "가로ㄱ": {
+        image: "",
+        question: "",
+      },
+      "가로ㄴ": {
+        image: "",
+        question: "",
+      },
+      "가로ㄷ": {
+        image: "",
+        question: "",
+      },
+      "가로ㄹ": {
+        image: "",
+        question: "",
+      },
+      "가로ㅁ": {
+        image: "",
+        question: "",
+      },
+      "가로ㅂ": {
+        image: "",
+        question: "",
+      },
+      "가로ㅅ": {
+        image: "",
+        question: "",
+      },
+      "가로ㅇ": {
+        image: "",
+        question: "",
+      },
+      /* ── 세로 1 ~ 8 (8문제) ── */
+      "세로1": {
+        image: "",
+        question: "",
+      },
+      "세로2": {
+        image: "",
+        question: "",
+      },
+      "세로3": {
+        image: "",
+        question: "",
+      },
+      "세로4": {
+        image: "",
+        question: "",
+      },
+      "세로5": {
+        image: "",
+        question: "",
+      },
+      "세로6": {
+        image: "",
+        question: "",
+      },
+      "세로7": {
+        image: "",
+        question: "",
+      },
+      "세로8": {
+        image: "",
+        question: "",
+      },
+    };
+
+    function normalizeClue(raw) {
+      return String(raw)
+        .trim()
+        .replace(/\s+/g, "")
+        .toLowerCase();
+    }
+
+    /** 한글+숫자 단서: "가로1" 형태로 canonical 키 생성 시도 */
+    function resolveClueKey(input) {
+      const n = normalizeClue(input);
+      for (const key of Object.keys(clues)) {
+        if (normalizeClue(key) === n) return key;
+      }
+      return null;
+    }
+
+    const overlay = document.getElementById("overlay");
+    const form = document.getElementById("clue-form");
+    const input = document.getElementById("clue-input");
+    const toastEl = document.getElementById("toast");
+    const btnClose = document.getElementById("btn-close");
+
+    let toastTimer = null;
+
+    function showToast(message, isError) {
+      toastEl.textContent = message;
+      toastEl.classList.toggle("error", !!isError);
+      toastEl.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2800);
+    }
+
+    const quizImageWrap = document.getElementById("quiz-image-wrap");
+    const quizImage = document.getElementById("quiz-image");
+
+    function openQuiz(key) {
+      const data = clues[key];
+      if (!data) return;
+
+      document.getElementById("quiz-tag").textContent = key.startsWith("가로") ? "가로 문제" : "세로 문제";
+      document.getElementById("quiz-title").textContent = key;
+
+      const qText = (data.question || "").trim();
+      document.getElementById("quiz-question").textContent =
+        qText || "(question 칸에 문제를 붙여 넣어 주세요.)";
+
+      const src = (data.image || "").trim();
+      if (src) {
+        quizImageWrap.classList.remove("is-empty");
+        quizImage.src = src;
+        quizImage.alt = key + " 문제 이미지";
+      } else {
+        quizImageWrap.classList.add("is-empty");
+        quizImage.removeAttribute("src");
+        quizImage.alt = "";
+      }
+
+      overlay.hidden = false;
+      requestAnimationFrame(() => overlay.classList.add("open"));
+      document.body.style.overflow = "hidden";
+      btnClose.focus();
+    }
+
+    function closeQuiz() {
+      overlay.classList.remove("open");
+      document.body.style.overflow = "";
+      setTimeout(() => {
+        overlay.hidden = true;
+        input.focus();
+      }, 280);
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const key = resolveClueKey(input.value);
+      if (!key) {
+        showToast("일치하는 단서 번호가 없어요. 현장 표지를 다시 확인해 주세요.", true);
+        input.select();
+        return;
+      }
+      openQuiz(key);
+      input.value = "";
+    });
+
+    btnClose.addEventListener("click", closeQuiz);
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeQuiz();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && overlay.classList.contains("open")) closeQuiz();
+    });
+
+    /* URL ?clue=가로ㄱ 또는 ?clue=세로1 QR 딥링크 */
+    (function applyQueryClue() {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get("clue") || params.get("c");
+      if (q) {
+        const key = resolveClueKey(q);
+        if (key) {
+          input.value = key;
+          openQuiz(key);
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
