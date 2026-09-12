@@ -6,7 +6,7 @@
   <title>수원 화성 · QR 역사 미션</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;600;700;800&family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --obang-blue: #1e6fd9;
@@ -73,13 +73,13 @@
 
     h1 {
       font-family: "Black Han Sans", "Noto Sans KR", sans-serif;
-      font-size: clamp(1.75rem, 6vw, 2.25rem);
+      font-size: clamp(3rem, 6vw, 2.25rem);
       line-height: 1.2;
-      text-shadow: 3px 3px 0 var(--obang-white), 4px 4px 0 var(--obang-blue);
+      color: var(--obang-black);
     }
 
     h1 span.accent {
-      color: var(--obang-red);
+      color: var(--obang-black);
     }
 
     .subtitle {
@@ -134,7 +134,8 @@
     input[type="text"] {
       flex: 1;
       font-family: inherit;
-      font-size: 1rem;
+      font-size: 1.2rem;
+      letter-spacing: 0.12em;
       font-weight: 600;
       padding: 14px 16px;
       border: 3px solid var(--obang-black);
@@ -151,6 +152,7 @@
     input[type="text"]::placeholder {
       color: #aaa;
       font-weight: 500;
+      letter-spacing: 0;
     }
 
     button {
@@ -303,45 +305,61 @@
       padding: 20px;
     }
 
-    .quiz-image-wrap {
+    .word-grid-wrap {
       margin-bottom: 18px;
       border: 3px solid var(--obang-black);
       border-radius: var(--radius-sm);
-      overflow: hidden;
       box-shadow: 3px 3px 0 var(--obang-blue);
-      background: #f5f5f5;
+      background: #fff;
+      padding: 12px;
     }
 
-    .quiz-image-wrap img {
-      display: block;
-      width: 100%;
-      height: auto;
-      vertical-align: middle;
+    .grid-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 0.78rem;
+      font-weight: 800;
     }
 
-    .quiz-image-placeholder {
-      display: none;
-      padding: 48px 16px;
-      text-align: center;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: #888;
+    .grid-meta {
+      margin: 0 0 10px;
+      font-size: 0.75rem;
       line-height: 1.5;
-      background: repeating-linear-gradient(
-        -45deg,
-        #fff,
-        #fff 8px,
-        #f0f0f0 8px,
-        #f0f0f0 16px
-      );
+      color: #444;
     }
 
-    .quiz-image-wrap.is-empty .quiz-image-placeholder {
-      display: block;
+    .word-grid {
+      display: grid;
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+      grid-auto-rows: 1fr;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border: 3px solid var(--obang-black);
+      background: var(--obang-black);
+      gap: 2px;
     }
 
-    .quiz-image-wrap.is-empty img {
-      display: none;
+    .grid-cell {
+      min-width: 0;
+      min-height: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: #fff;
+      box-shadow: none;
+    }
+
+    .grid-cell.selected {
+      background: var(--obang-red);
+      box-shadow: inset 0 0 0 1px var(--obang-black);
+    }
+
+    .grid-cell:focus-visible {
+      outline: 3px solid var(--obang-blue);
+      outline-offset: -3px;
     }
 
     .quiz-question {
@@ -392,7 +410,7 @@
     <header class="hero">
       <div class="badge">SUWON HWASEONG</div>
       <h1>화성 <span class="accent">역사</span> 미션</h1>
-      <p class="subtitle">현장 QR을 스캔한 뒤,<br />표지판에 적힌 단서 번호를 입력하세요.</p>
+      <p class="subtitle">현장 QR을 스캔한 뒤,<br />표지판에 적힌 문제 입장 번호를 입력하세요.</p>
     </header>
 
     <section class="card" aria-labelledby="clue-label">
@@ -400,20 +418,21 @@
         <span class="dot blue"></span>
         <span id="clue-label"> 문제 입장 번호 입력</span>
       </div>
-      <label for="clue-input">예: 1234, 38</label>
+      <label for="clue-input">예: 0000</label>
       <form id="clue-form" class="input-row" autocomplete="off">
         <input
           id="clue-input"
           type="text"
-          inputmode="text"
+          inputmode="numeric"
+          pattern="[0-9]*"
           placeholder="단서 번호"
-          maxlength="20"
+          maxlength="10"
           aria-describedby="clue-hint"
         />
         <button type="submit" class="btn-primary">확인</button>
       </form>
       <p id="clue-hint" class="hint">
-        가로 <code>ㄱ</code>~<code>ㅇ</code> 8칸 · 세로 <code>1</code>~<code>8</code> 8칸 (띄어쓰기 무시)
+        숫자로 된 단서 번호를 입력하면 문제에 입장할 수 있어요.
       </p>
     </section>
 
@@ -423,9 +442,9 @@
         <span>미션 안내</span>
       </div>
       <p class="hint" style="margin-top: 0; font-size: 0.85rem; color: #333;">
-        ① 성곽 곳곳의 QR 코드를 찾아보세요.<br />
-        ② 단서판의 <strong>가로·세로 번호</strong>를 확인하세요.<br />
-        ③ 문제를 확인하고 현장에서 답을 찾아 보세요!
+        ① 행사장 곳곳의 QR 코드를 찾아보세요.<br />
+        ② QR 코드 아래 <strong>문제 입장 번호</strong>를 확인하세요.<br />
+        ③ 종이에 정답을 작성한 뒤, 숨겨진 단어를 찾아주세요!
       </p>
     </section>
 
@@ -440,9 +459,11 @@
         <button type="button" class="btn-close" id="btn-close" aria-label="닫기">×</button>
       </header>
       <div class="quiz-body">
-        <div id="quiz-image-wrap" class="quiz-image-wrap is-empty">
-          <img id="quiz-image" src="" alt="" />
-          <p class="quiz-image-placeholder">이미지 없음<br /><span style="font-weight:500;font-size:0.75rem;">clues · image 경로를 넣어 주세요</span></p>
+        <div class="word-grid-wrap">
+          <div class="grid-heading">
+            <span>낱말 위치 · 10×10</span>
+          </div>
+          <div id="word-grid" class="word-grid" role="grid" aria-label="낱말 위치 표시용 10×10 그리드"></div>
         </div>
         <div id="quiz-question" class="quiz-question"></div>
       </div>
@@ -453,75 +474,108 @@
 
   <script>
     /**
-     * 아래 clues 만 수정하세요.
-     * - image: 이미지 파일 경로 (예: "images/ga-ro-g.jpg") · 없으면 ""
-     * - question: 문제 텍스트 (줄바꿈 그대로 표시됩니다)
+    * 아래 clues 만 수정하세요.
+    * - 숫자 키: 현장에서 입력할 비밀번호
+    * - placement: 시작 행/열, 방향, 칸 수 (행과 열은 1부터 시작)
+    * - question: 문제 텍스트 (줄바꿈 그대로 표시됩니다)
      */
     const clues = {
       /* ── 가로 ㄱ ~ ㅇ (8문제) ── */
       "1997": {
-        image: "",
+        direction: "가로",
+        label: "[가로 ㄱ]",
+        placement: { row: 1, column: 1, direction: "가로", length: 3 },
         question: "[가로 ㄱ] 정조 대왕이 어머니 혜경궁 홍씨를 모시고 수원화성으로 행차를 떠날 때 출발했던 한양의 궁궐",
       },
       "1796": {
-        image: "",
+        direction: "가로",
+        label: "[가로 ㄴ]",
+        placement: { row: 3, column: 3, direction: "가로", length: 4 },
         question: "[가로 ㄴ]수원화성을 축조하고 규장각과 장용영을 설치한 조선시대 22대 국왕",
       },
       "1752": {
-        image: "",
+        direction: "가로",
+        label: "[가로 ㄷ]",
+        placement: { row: 5, column: 2, direction: "가로", length: 3 },
         question: "[가로 ㄷ] 정조 대왕이 창설한 국왕 직속 친위부대의 이름 - 000 부대",
       },
-      "가로ㄹ": {
-        image: "",
+      "1793": {
+        direction: "가로",
+        label: "[가로 ㄹ]",
+        placement: { row: 6, column: 5, direction: "가로", length: 6 },
         question: "",
       },
-      "가로ㅁ": {
-        image: "",
+      "1709": {
+        direction: "가로",
+        label: "[가로 ㅁ]",
+        placement: { row: 8, column: 4, direction: "가로", length: 4 },
         question: "",
       },
-      "가로ㅂ": {
-        image: "",
+      "0402": {
+        direction: "가로",
+        label: "[가로 ㅂ]",
+        placement: { row: 10, column: 2, direction: "가로", length: 3 },
         question: "",
       },
-      "가로ㅅ": {
-        image: "",
+      "1801": {
+        direction: "가로",
+        label: "[가로 ㅅ]",
+        placement: { row: 1, column: 9, direction: "가로", length: 2 },
         question: "",
       },
-      "가로ㅇ": {
-        image: "",
+      "1004": {
+        direction: "가로",
+        label: "[가로 ㅇ]",
+        placement: { row: 9, column: 9, direction: "가로", length: 2 },
         question: "",
       },
       /* ── 세로 1 ~ 8 (8문제) ── */
-      "세로1": {
-        image: "",
+      "0022": {
+        direction: "세로",
+        label: "[세로 1]",
+        placement: { row: 1, column: 1, direction: "세로", length: 3 },
         question: "",
       },
-      "세로2": {
-        image: "",
+      "5740": {
+        direction: "세로",
+        label: "[세로 2]",
+        placement: { row: 1, column: 5, direction: "세로", length: 3 },
         question: "",
       },
-      "세로3": {
-        image: "",
+      "0004": {
+        direction: "세로",
+        label: "[세로 3]",
+        placement: { row: 3, column: 3, direction: "세로", length: 3 },
         question: "",
       },
-      "세로4": {
-        image: "",
+      "1423": {
+        direction: "세로",
+        label: "[세로 4]",
+        placement: { row: 5, column: 2, direction: "세로", length: 3 },
         question: "",
       },
-      "세로5": {
-        image: "",
+      "1776": {
+        direction: "세로",
+        label: "[세로 5]",
+        placement: { row: 5, column: 6, direction: "세로", length: 5 },
         question: "",
       },
-      "세로6": {
-        image: "",
+      "0032": {
+        direction: "세로",
+        label: "[세로 6]",
+        placement: { row: 8, column: 4, direction: "세로", length: 3 },
         question: "",
       },
-      "세로7": {
-        image: "",
+      "2000": {
+        direction: "세로",
+        label: "[세로 7]",
+        placement: { row: 1, column: 10, direction: "세로", length: 4 },
         question: "",
       },
-      "세로8": {
-        image: "",
+      "3202": {
+        direction: "세로",
+        label: "[세로 8]",
+        placement: { row: 9, column: 9, direction: "세로", length: 2 },
         question: "",
       },
     };
@@ -533,7 +587,6 @@
         .toLowerCase();
     }
 
-    /** 한글+숫자 단서: "가로1" 형태로 canonical 키 생성 시도 */
     function resolveClueKey(input) {
       const n = normalizeClue(input);
       for (const key of Object.keys(clues)) {
@@ -558,30 +611,56 @@
       toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2800);
     }
 
-    const quizImageWrap = document.getElementById("quiz-image-wrap");
-    const quizImage = document.getElementById("quiz-image");
+    const wordGrid = document.getElementById("word-grid");
+
+    function clearGrid() {
+      wordGrid.querySelectorAll(".selected").forEach((cell) => {
+        cell.classList.remove("selected");
+        cell.textContent = "";
+        cell.setAttribute("aria-selected", "false");
+      });
+    }
+
+    for (let index = 0; index < 100; index += 1) {
+      const cell = document.createElement("button");
+      cell.type = "button";
+      cell.className = "grid-cell";
+      cell.setAttribute("role", "gridcell");
+      cell.setAttribute("aria-label", `${Math.floor(index / 10) + 1}행 ${index % 10 + 1}열`);
+      wordGrid.appendChild(cell);
+    }
+
+    function renderPlacement(data) {
+      clearGrid();
+      const placement = data.placement;
+      if (!placement) {
+        return;
+      }
+
+      const isVertical = placement.direction === "세로";
+
+      Array.from({ length: placement.length }, (_, offset) => {
+        const row = placement.row + (isVertical ? offset : 0);
+        const column = placement.column + (isVertical ? 0 : offset);
+        if (row < 1 || row > 10 || column < 1 || column > 10) return;
+        const cell = wordGrid.children[(row - 1) * 10 + column - 1];
+        cell.classList.add("selected");
+        cell.setAttribute("aria-selected", "true");
+        cell.setAttribute("aria-label", `${row}행 ${column}열, 낱말 위치`);
+      });
+    }
 
     function openQuiz(key) {
       const data = clues[key];
       if (!data) return;
 
-      document.getElementById("quiz-tag").textContent = key.startsWith("가로") ? "가로 문제" : "세로 문제";
-      document.getElementById("quiz-title").textContent = key;
+      renderPlacement(data);
+      document.getElementById("quiz-tag").textContent = `${data.direction} 문제`;
+      document.getElementById("quiz-title").textContent = data.label;
 
       const qText = (data.question || "").trim();
       document.getElementById("quiz-question").textContent =
         qText || "(question 칸에 문제를 붙여 넣어 주세요.)";
-
-      const src = (data.image || "").trim();
-      if (src) {
-        quizImageWrap.classList.remove("is-empty");
-        quizImage.src = src;
-        quizImage.alt = key + " 문제 이미지";
-      } else {
-        quizImageWrap.classList.add("is-empty");
-        quizImage.removeAttribute("src");
-        quizImage.alt = "";
-      }
 
       overlay.hidden = false;
       requestAnimationFrame(() => overlay.classList.add("open"));
@@ -618,7 +697,7 @@
       if (e.key === "Escape" && overlay.classList.contains("open")) closeQuiz();
     });
 
-    /* URL ?clue=가로ㄱ 또는 ?clue=세로1 QR 딥링크 */
+    /* URL ?clue=1997 또는 ?clue=1796 QR 딥링크 */
     (function applyQueryClue() {
       const params = new URLSearchParams(window.location.search);
       const q = params.get("clue") || params.get("c");
