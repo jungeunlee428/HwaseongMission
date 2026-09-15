@@ -286,21 +286,28 @@
 
     .board .bcell .bnum {
       position: absolute;
-      top: 1px;
+      top: 2px;
       left: 2px;
-      font-size: 8px;
+      font-size: 7.5px;
       font-weight: 800;
       color: var(--board-red-deep);
       line-height: 1;
       z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
     }
 
-    .board .bcell .bnum.bnum-stack {
-      display: block;
-    }
-
-    .board .bcell .bnum.bnum-stack span {
-      display: block;
+    .board .bcell .bnum span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 11px;
+      height: 9px;
+      background: rgba(255, 255, 255, 0.65);
+      border-radius: 2px;
+      line-height: 1;
     }
 
     .board-caption {
@@ -525,6 +532,10 @@
           <div class="board-frame">
             <div class="board mission-board" data-mode="current" role="img" aria-label="10×10 미션 지도. 지금 확인한 단서 위치가 밝게 표시됩니다."></div>
           </div>
+          <div class="board-caption">
+            <span>찾은 단서는 노랗게 빛나요 ✨</span>
+            <span class="found-count"><span class="found-count-num">0</span> / <span class="total-count-num">16</span></span>
+          </div>
         </section>
 
         <div id="quiz-question" class="quiz-question"></div>
@@ -702,17 +713,13 @@
               if (num) {
                 const tag = document.createElement("span");
                 tag.className = "bnum";
-                if (num.length > 1) {
-                  // "ㄱ1", "8ㅇ"처럼 2글자 조합 라벨은 가로가 아니라 세로로 쌓아서 표시
-                  tag.classList.add("bnum-stack");
-                  num.split("").forEach((ch) => {
-                    const line = document.createElement("span");
-                    line.textContent = ch;
-                    tag.appendChild(line);
-                  });
-                } else {
-                  tag.textContent = num;
-                }
+                // 1글자든("2","ㅅ") 2글자든("ㄱ1","8ㅇ") 항상 같은 방식(글자별 네모 박스, 세로로 쌓기)으로 렌더링해서
+                // 서로 다르게 생기지 않고 지도 전체가 통일된 느낌이 나도록 처리
+                num.split("").forEach((ch) => {
+                  const line = document.createElement("span");
+                  line.textContent = ch;
+                  tag.appendChild(line);
+                });
                 div.appendChild(tag);
               }
               instance.cells[`${r},${c}`] = div;
