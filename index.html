@@ -22,6 +22,7 @@
       --obang-yellow: #ffd60a;
       --obang-white: #fffef7;
       --obang-black: #1a1a1a;
+      --obang-navy: #4d7a80;
       --bg-cream: #fff8e7;
       --shadow: 4px 4px 0 var(--obang-black);
       --radius: 20px;
@@ -30,8 +31,8 @@
       /* 지도(메인 그리드) 전용 색상 */
       --board-red: #ae3428;
       --board-red-deep: #8c271e;
-      --board-cell-locked: #ddd2b3;
-      --board-cell-found: #fffef7;
+      --board-cell-locked: #fffef7;
+      --board-cell-found: #ffedb0;
     }
 
     * {
@@ -253,7 +254,7 @@
       grid-auto-rows: 1fr;
       width: 100%;
       aspect-ratio: 1 / 1;
-      gap: 2px;
+      gap: 0px;
     }
 
     .board .bcell {
@@ -261,7 +262,19 @@
       min-width: 0;
       min-height: 0;
       background: transparent;
+      border-top: 1px solid var(--obang-black);
+      border-left: 1px solid var(--obang-black);
     }
+    /* 맨 오른쪽 열에만 오른쪽 테두리 추가 */
+    .board .bcell:nth-child(10n) {
+      border-right: 1px solid var(--obang-black);
+    }
+
+    /* 맨 아래 행에만 아래쪽 테두리 추가 */
+    .board .bcell:nth-child(n + 91) {
+      border-bottom: 1px solid var(--obang-black);
+    }
+
 
     .board .bcell.blocked {
       background: var(--board-red);
@@ -290,13 +303,13 @@
       left: 2px;
       font-size: 7.5px;
       font-weight: 800;
-      color: var(--board-red-deep);
+      color: #ffffff;
       line-height: 1;
       z-index: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1px;
+      /* gap: 1px; */
     }
 
     .board .bcell .bnum span {
@@ -304,10 +317,17 @@
       align-items: center;
       justify-content: center;
       min-width: 11px;
-      height: 9px;
-      background: rgba(255, 255, 255, 0.65);
-      border-radius: 2px;
+      height: 11px;
+      background: var(--obang-navy);
+      border-left: 1px solid rgba(26, 26, 26, 0.4);
+      border-right: 1px solid rgba(26, 26, 26, 0.4);
+      border-top: 1px solid rgba(26, 26, 26, 0.4);
       line-height: 1;
+      /* border-radius: 2px; */
+    }
+
+    .board .bcell .bnum span:last-child {
+      border-bottom: 1px solid rgba(26, 26, 26, 0.4);
     }
 
     .board-caption {
@@ -593,7 +613,7 @@
       "1801": {
         direction: "가로",
         label: "[가로 ㅅ]",
-        placement: { row: 1, column: 8, direction: "가로", length: 2 },
+        placement: { row: 1, column: 9, direction: "가로", length: 2 },
         question: "[가로 ㅅ]왕명으로 특별한 사명을 띠고 지방에 파견되던 임시 벼슬. 암행00",
       },
       "1004": {
@@ -642,7 +662,7 @@
       "3500": {
         direction: "세로",
         label: "[세로 7]",
-        placement: { row: 1, column: 9, direction: "세로", length: 4 },
+        placement: { row: 1, column: 10, direction: "세로", length: 4 },
         question: "[세로 7]정조 대왕의 아버지로, 수원화성을 짓게 된 배경이 된 인물",
       },
       "3202": {
@@ -663,10 +683,10 @@
      *  전부 찾아서 똑같이 그리고 똑같이 반짝이도록 처리합니다.)
      * ───────────────────────────────────────────────────────── */
     const OPEN = [
-      [1, 1, 1, 0, 1, 0, 0, 1, 1, 0],
-      [1, 0, 0, 0, 1, 0, 0, 0, 1, 0],
-      [1, 0, 1, 1, 1, 1, 0, 0, 1, 0],
-      [0, 0, 1, 0, 0, 0, 0, 0, 1, 0],
+      [1, 1, 1, 0, 1, 0, 0, 0, 1, 1],
+      [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+      [1, 0, 1, 1, 1, 1, 0, 0, 0, 1],
+      [0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
       [0, 1, 1, 1, 0, 1, 0, 0, 0, 0],
       [0, 1, 0, 0, 1, 1, 1, 1, 1, 1],
       [0, 1, 0, 0, 0, 1, 0, 0, 0, 0],
@@ -675,9 +695,9 @@
       [0, 1, 1, 1, 0, 0, 0, 0, 1, 0],
     ];
     const NUMBERS = {
-      "1,1": "ㄱ1", "1,5": "2", "1,8": "ㅅ", "1,9": "7",
+      "1,1": "ㄱ1", "1,5": "2", "1,9": "ㅅ", "1,10": "7",
       "3,3": "ㄴ3", "5,2": "ㄷ4", "5,6": "5", "6,5": "ㄹ",
-      "8,4": "ㅁ6", "9,9": "8ㅇ", "10,2": "ㅂ",
+      "8,4": "ㅁ6", "9,9": "ㅇ8", "10,2": "ㅂ",
     };
 
     const FOUND_KEY = "hwaseong-mission-found-v1";
